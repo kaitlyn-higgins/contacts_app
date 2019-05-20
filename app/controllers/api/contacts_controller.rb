@@ -1,13 +1,14 @@
 class Api::ContactsController < ApplicationController
 
-def contact_action
-  @contacts = Contact.first
-  render 'contact.json.jbuilder'
-end
+  before_action :authenticate_user
 
 def index
-  @contacts = Contact.all
-  render 'index.json.jbuilder'
+  @contacts = current_user.contacts
+
+  if params[:search]
+    @contacts = @contacts.where("first_name iLIKE ? OR last_name iLIKE ? OR middle_name iLIKE ? OR email iLIKE ? OR bio iLIKE ?", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%", "%#{params[:search]}%")
+  end
+    render 'index.json.jbuilder'
 end
 
 def show
@@ -23,10 +24,15 @@ def create
     email: params[:email],
     phone_number: params[:phone_number],
     birthday: params[:birthday],
-    bio: params[:bio]
+    bio: params[:bio],
+    latitude: coordinates[0],
+    longitude: coordinates[1],
+    user_id: current_user.id
     )
-    @contact.save
-  render 'show.json.jbuilder'
+  if @contact.save
+    render 'show.json.jbuilder'
+  else render json: {errors: @product.errors.full_messages}, status: :unprocessable_entity
+  end
 end
 
 
@@ -40,8 +46,12 @@ end
     @contact.phone_number = params[:phone_number] || @contact.phone_number
     @contact.birthday = params[:birthday] || @contact.birthday
     @contact.bio = params[:bio] || @contact.bio
-    @contact.save
-    render 'show.json.jbuilder'
+    @contact.latitude = coordinates[0] || @contact.latitude
+    @contact.longitude = coordinates[1] || @contact.longitude
+    if @contact.save
+      render 'show.json.jbuilder'
+    else render json: {errors: @product.errors.full_messages}, status: :unprocessable_entity
+    end
   end
 
   def destroy
