@@ -1,5 +1,5 @@
 User.create!([
-  {name: "Kaitlyn", email: "kaitlyn@gmail.com", password_digest: "$2a$10$amKVAdvkyjRNvUODcXzJ0updUEZRAWdnvriS1psJAUMR3Xi6nSlrG"},
+  {name: "Kaitlyn", email: "kaitlynbh@gmail.com", password_digest: "$2a$10$amKVAdvkyjRNvUODcXzJ0updUEZRAWdnvriS1psJAUMR3Xi6nSlrG"},
   {name: "Ashley", email: "ashley@gmail.com", password_digest: "$2a$10$DOu7gHfcU8be2cxiSp/5GeQqaVwRrIqyZisRu7gugIOC.ytSd7592"}
 ])
 
